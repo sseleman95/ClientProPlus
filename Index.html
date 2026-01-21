@@ -527,6 +527,22 @@
             font-size: 0.9rem;
         }
 
+        .pwa-explanation, .demo-box, .comparison-table, .feature-box, .code-block, .screenshot, .cta-buttons {
+            animation: scroll-fade 0.9s ease;
+        }
+
+        @keyframes scroll-fade {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* Responsive */
         @media (max-width: 992px) {
             .hero-title {
@@ -1287,29 +1303,6 @@
             });
         });
         
-        // Animate elements on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-        
-        // Observe elements to animate
-        document.querySelectorAll('.pwa-explanation, .demo-box, .comparison-table, .feature-box, .code-block, .screenshot, .cta-buttons').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(el);
-        });
-
         // Navegación entre slides
         document.querySelectorAll('.nav-btn').forEach(button => {
             button.addEventListener('click', function () {
