@@ -865,7 +865,7 @@
                     <div id="cartButton" class="screenshot">
                         <div class="screenshot-label">Nuevo Financiamiento</div>
                     </div>
-                    <div class="screenshot">
+                    <div id="calendarButton" class="screenshot">
                         <div class="screenshot-label">Calendario de Pagos</div>
                     </div>
                     <div id="reportButton" class="screenshot">
@@ -1068,7 +1068,7 @@
                             <i class="fas fa-sync-alt"></i>
                         </div>
                         <h4 class="feature-title">Actualizaciones Gratuitas</h4>
-                        <p>Un año de actualizaciones gratuitas. Nuevas características y mejoras de seguridad.</p>
+                        <p>Tres meses de actualizaciones gratuitas. Nuevas características y mejoras de seguridad.</p>
                     </div>
 
                     <div class="feature-box">
@@ -1170,6 +1170,32 @@
                     <div style="position: fixed; top: 20px; right: 20px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 20px; border-radius: 12px; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-width: 350px;">
                         <h4 style="margin-bottom: 8px; font-size: 1.2rem;"><i class="fas fa-check-circle"></i> Registro Inteligente</h4>
                         <p style="font-size: 0.95rem;">Captura de datos con minimización de fricción y segmentación automática para campañas personalizadas.</p>
+                    </div>
+                `;
+                document.body.appendChild(confirmation);
+                
+                // Remove after 5 seconds
+                setTimeout(() => {
+                    confirmation.remove();
+                }, 5000);
+            }, 300);
+        });
+
+        // Interactive elements
+        document.getElementById('calendarButton').addEventListener('click', function() {
+            this.innerHTML = `
+                    <div style="z-index:2; position:relative; font-size: 2rem;" class="feature-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <div class="screenshot-label">Calendario de Pagos</div>
+                `;
+            this.style.transform = 'scale(0.98)';
+            
+            // Create a confirmation message
+            setTimeout(() => {
+                const confirmation = document.createElement('div');
+                confirmation.innerHTML = `
+                    <div style="position: fixed; top: 20px; right: 20px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 20px; border-radius: 12px; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-width: 350px;">
+                        <h4 style="margin-bottom: 8px; font-size: 1.2rem;"><i class="fas fa-check-circle"></i> Calendario automático de pagos</h4>
+                        <p style="font-size: 0.95rem;">Gestión y organización de los pagos: simple, intuitivo y seguro para tu tranquilidad financiara.</p>
                     </div>
                 `;
                 document.body.appendChild(confirmation);
