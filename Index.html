@@ -1072,6 +1072,32 @@
 
     <script>
         // Interactive elements
+        document.getElementById('dashboardButton').addEventListener('click', function() {
+            this.innerHTML = `
+                    <div style="z-index:2; position:relative; font-size: 2rem;" class="feature-icon"><i class="fas fa-chart-bar"></i></div>
+                    <div class="screenshot-label">Dashboard Principal</div>
+                `;
+            this.style.transform = 'scale(0.98)';
+            
+            // Create a confirmation message
+            setTimeout(() => {
+                const confirmation = document.createElement('div');
+                confirmation.innerHTML = `
+                    <div style="position: fixed; top: 20px; right: 20px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 20px; border-radius: 12px; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-width: 350px;">
+                        <h4 style="margin-bottom: 8px; font-size: 1.2rem;"><i class="fas fa-check-circle"></i>Reportes y análisis</h4>
+                        <p style="font-size: 0.95rem;">Dashboards con métricas clave para la toma de decisiones empresariales.</p>
+                    </div>
+                `;
+                document.body.appendChild(confirmation);
+                
+                // Remove after 5 seconds
+                setTimeout(() => {
+                    confirmation.remove();
+                }, 5000);
+            }, 300);
+        });
+        
+        // Interactive elements
         document.getElementById('reportButton').addEventListener('click', function() {
             this.innerHTML = `
                     <div style="z-index:2; position:relative; font-size: 2rem;" class="feature-icon"><i class="fas fa-chart-line"></i></div>
