@@ -201,6 +201,7 @@
             border-radius: 15px;
             border-left: 5px solid var(--secondary);
             transition: transform 0.3s ease;
+            cursor: pointer;
         }
 
         .feature-box:hover {
@@ -226,7 +227,12 @@
             padding: 30px;
             border-radius: 15px;
             margin: 30px 0;
+            transition: all 0.3s ease;
             border: 2px dashed var(--secondary);
+        }
+        
+        .pwa-explanation:hover {
+            transform: translateX(5px);
         }
 
         .pwa-explanation h3 {
@@ -351,7 +357,7 @@
             padding: 35px 30px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.4s ease;
-            border-top: 6px solid #f39c12;
+            cursor: pointer;
         }
         
         .screenshot::before {
@@ -376,6 +382,7 @@
         .screenshot:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 40px rgba(251, 191, 36, 0.15);
+            border-top: 6px solid #f39c12;
         }
 
         .screenshot-label {
