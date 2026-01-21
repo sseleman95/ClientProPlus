@@ -59,6 +59,7 @@
             margin-bottom: 15px;
             line-height: 1.1;
             text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer
         }
 
         .hero-subtitle {
@@ -496,6 +497,7 @@
             font-size: 1.1rem;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-color: var(--success);
         }
 
         .cta-button:hover {
@@ -924,8 +926,8 @@
                             <i class="fas fa-robot"></i>
                         </div>
                         <h4 class="feature-title">Automatización Total</h4>
-                        <p>Calendario de pagos automático, alertas por SMS/email, notificaciones push y clasificación de
-                            clientes.</p>
+                        <p>Calendario de pagos automático, alertas por SMS/email, notificaciones push, clasificación de
+                            clientes y redes sociales sincronizadas en flujos automatizados de conversión.</p>
                     </div>
 
                     <div class="feature-box">
@@ -1028,7 +1030,9 @@
                         financiamientos.</p>
 
                     <div class="cta-buttons">
-                        <a href="#" class="cta-button">Solicitar Demostración Personalizada</a>
+                        <button class="cta-button" id="demoButton">
+                            <i class="fas fa-calendar-check"></i> Agendar Demostración Personalizada
+                        </button>
                         <a href="#" class="cta-button secondary">Descargar Versión de Prueba</a>
                     </div>
                 </div>
@@ -1043,6 +1047,65 @@
     </div>
 
     <script>
+        // Interactive elements
+        document.getElementById('demoButton').addEventListener('click', function() {
+            this.innerHTML = '<i class="fas fa-check"></i> Demostración Agendada - Nos contactaremos en 24h';
+            this.style.background = 'linear-gradient(90deg, #10b981, #047857)';
+            this.style.color = 'white';
+            this.style.transform = 'scale(0.98)';
+            
+            // Create a confirmation message
+            setTimeout(() => {
+                const confirmation = document.createElement('div');
+                confirmation.innerHTML = `
+                    <div style="position: fixed; top: 20px; right: 20px; background: linear-gradient(90deg, #10b981, #047857); color: white; padding: 20px; border-radius: 12px; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-width: 350px;">
+                        <h4 style="margin-bottom: 8px; font-size: 1.2rem;"><i class="fas fa-check-circle"></i> ¡Solicitud Recibida!</h4>
+                        <p style="font-size: 0.95rem;">Un especialista se contactará con usted en las próximas 24 horas para coordinar la demostración personalizada.</p>
+                    </div>
+                `;
+                document.body.appendChild(confirmation);
+                
+                // Remove after 5 seconds
+                setTimeout(() => {
+                    confirmation.remove();
+                }, 5000);
+            }, 300);
+        });
+        
+        // Add hover effects to all cards
+        document.querySelectorAll('.hero-tag, .nav-btn, .demo-box, .feature-box, .screenshot').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.zIndex = '10';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.zIndex = '1';
+            });
+        });
+        
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe elements to animate
+        document.querySelectorAll('.pwa-explanation, .demo-box, .comparison-table, .feature-box, .code-block, .screenshot, .cta-buttons').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
         // Navegación entre slides
         document.querySelectorAll('.nav-btn').forEach(button => {
             button.addEventListener('click', function () {
