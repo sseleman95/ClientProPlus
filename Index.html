@@ -475,7 +475,7 @@
         .cta-button {
             display: inline-block;
             background: white;
-            color: var(--secondary);
+            color: var(--success);
             padding: 15px 30px;
             border-radius: 50px;
             text-decoration: none;
@@ -486,8 +486,10 @@
         }
 
         .cta-button:hover {
+            color: var(--success);
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: var(--success);
+            box-shadow: 0 10px 25px rgba(39, 174, 96, 0.5);
         }
 
         .cta-button.secondary {
@@ -498,7 +500,8 @@
 
         .cta-button.secondary:hover {
             background: white;
-            color: var(--secondary);
+            color: var(--success);
+            border: 2px solid var(--success);
         }
 
         /* Footer */
