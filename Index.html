@@ -829,7 +829,7 @@
                     principal:</p>
 
                 <div class="screenshot-gallery">
-                    <div class="screenshot">
+                    <div id="loginButton" class="screenshot">
                         <div class="screenshot-label">Pantalla de Login</div>
                     </div>
                     <div class="screenshot">
@@ -1084,8 +1084,34 @@
                 const confirmation = document.createElement('div');
                 confirmation.innerHTML = `
                     <div style="position: fixed; top: 20px; right: 20px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 20px; border-radius: 12px; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-width: 350px;">
-                        <h4 style="margin-bottom: 8px; font-size: 1.2rem;"><i class="fas fa-check-circle"></i> Registro/Login Inteligente</h4>
+                        <h4 style="margin-bottom: 8px; font-size: 1.2rem;"><i class="fas fa-check-circle"></i> Registro Inteligente</h4>
                         <p style="font-size: 0.95rem;">Captura de datos con minimización de fricción y segmentación automática para campañas personalizadas.</p>
+                    </div>
+                `;
+                document.body.appendChild(confirmation);
+                
+                // Remove after 5 seconds
+                setTimeout(() => {
+                    confirmation.remove();
+                }, 5000);
+            }, 300);
+        });
+        
+        // Interactive elements
+        document.getElementById('loginButton').addEventListener('click', function() {
+            this.innerHTML = `
+                    <div style="z-index:2; position:relative; font-size: 2rem;" class="feature-icon"><i class="fas fa-user-plus"></i></div>
+                    <div class="screenshot-label">Login Seguro</div>
+                `;
+            this.style.transform = 'scale(0.98)';
+            
+            // Create a confirmation message
+            setTimeout(() => {
+                const confirmation = document.createElement('div');
+                confirmation.innerHTML = `
+                    <div style="position: fixed; top: 20px; right: 20px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 20px; border-radius: 12px; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-width: 350px;">
+                        <h4 style="margin-bottom: 8px; font-size: 1.2rem;"><i class="fas fa-check-circle"></i> Login Inteligente</h4>
+                        <p style="font-size: 0.95rem;">Acceso seguro y personalizado para cada usuario con autenticación protegida.</p>
                     </div>
                 `;
                 document.body.appendChild(confirmation);
