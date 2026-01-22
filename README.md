@@ -1,10 +1,10 @@
 # ClientPro+
 
-## 🎯 Overview
+## Overview
 
 ClientPro+ is a complete customer management and financing system designed specifically for businesses that offer payment plans to their customers. As an all-in-one platform that combines an exceptional user experience with a complete, secure, and scalable solution, it is designed to optimize your operations and maximize your profits.
 
-## 🚀 Installation and Configuration
+## Installation and Configuration
 
 Prerequisites
 
