@@ -498,6 +498,7 @@
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             border-color: var(--success);
+            cursor: pointer;
         }
 
         .cta-button:hover {
@@ -831,7 +832,7 @@
                             </div>
 
                             <div class="pwa-explanation" style="margin-top: 20px;">
-                                <h4><i class="fas fa-lightbulb"></i> Consejo importante</h4>
+                                <h3><i class="fas fa-lightbulb"></i> Consejo importante</h3>
                                 <p>Para el modo offline completo, asegúrese de que el <strong>Service Worker</strong>
                                     esté correctamente registrado. Esto sucede automáticamente la primera vez que accede
                                     a la aplicación.</p>
@@ -1293,7 +1294,7 @@
         });
         
         // Add hover effects to all cards
-        document.querySelectorAll('.hero-tag, .nav-btn, .demo-box, .feature-box, .screenshot').forEach(card => {
+        document.querySelectorAll('.nav-btn, .demo-box, .feature-box, .screenshot').forEach(card => {
             card.addEventListener('mouseenter', function() {
                 this.style.zIndex = '10';
             });
@@ -1303,31 +1304,6 @@
             });
         });
         
-        // Navegación entre slides
-        document.querySelectorAll('.nav-btn').forEach(button => {
-            button.addEventListener('click', function () {
-                // Remover clase active de todos los botones
-                document.querySelectorAll('.nav-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-
-                // Agregar clase active al botón clickeado
-                this.classList.add('active');
-
-                // Ocultar todos los slides
-                document.querySelectorAll('.slide').forEach(slide => {
-                    slide.classList.remove('active');
-                });
-
-                // Mostrar el slide correspondiente
-                const slideId = this.getAttribute('data-slide');
-                document.getElementById(`slide-${slideId}`).classList.add('active');
-
-                // Scroll al inicio del slide
-                document.getElementById(`slide-${slideId}`).scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-
         // Simulación de capturas de pantalla
         document.querySelectorAll('.screenshot').forEach((screenshot, index) => {
             const screens = [
@@ -1350,53 +1326,358 @@
         // Instrucciones dinámicas según el sistema operativo
         function detectOS() {
             const userAgent = window.navigator.userAgent;
-            if (userAgent.indexOf("Windows") !== -1) return "Windows";
-            if (userAgent.indexOf("Mac") !== -1) return "macOS";
-            if (userAgent.indexOf("Linux") !== -1) return "Linux";
-            return "Unknown";
+            const platform = window.navigator.platform;
+            
+            if (/Win/.test(platform)) return "Windows";
+            if (/Mac/.test(platform)) return "macOS";
+            if (/Linux/.test(platform)) return "Linux";
+            if (/Android/.test(userAgent)) return "Android";
+            if (/iPhone|iPad|iPod/.test(userAgent)) return "iOS";
+            
+            return "Sistema desconocido";
+        }
+
+        function generarInstruccionesOS(os) {
+            const instrucciones = {
+                'Windows': `
+                    <li>Asegúrese de tener <strong>Python 3+</strong> o <strong>Node.js</strong> instalado</li>
+                    <li>Ejecute el comando desde la terminal (CMD o PowerShell)</li>
+                    <li>Para acceso rápido, cree un acceso directo en el escritorio</li>
+                    <li>Recomendado: Usar Chrome o Edge para mejor compatibilidad PWA</li>
+                `,
+                'macOS': `
+                    <li>Abra Terminal desde Aplicaciones > Utilidades</li>
+                    <li>Ejecute los comandos de instalación del servidor</li>
+                    <li>Para instalación permanente, use: <code>brew install node</code></li>
+                    <li>Safari también soporta PWA (usar versión 16.4+)</li>
+                `,
+                'Linux': `
+                    <li>Python generalmente viene preinstalado</li>
+                    <li>Use: <code>python3 -m http.server 8000</code></li>
+                    <li>Para autostart: configure un servicio systemd</li>
+                    <li>Chrome y Firefox tienen excelente soporte PWA</li>
+                `,
+                'Android': `
+                    <li>Abra Chrome y visite la dirección localhost</li>
+                    <li>Toque el menú (⋮) y seleccione "Instalar app"</li>
+                    <li>La app aparecerá en la pantalla principal</li>
+                `,
+                'iOS': `
+                    <li>Use Safari para acceder a localhost</li>
+                    <li>Toca el ícono de compartir (↑)</li>
+                    <li>Desplázate y selecciona "Añadir a pantalla de inicio"</li>
+                `,
+                'Sistema desconocido': `
+                    <li>Siga las instrucciones generales de instalación</li>
+                    <li>Consulte con nuestro soporte técnico</li>
+                `
+            };
+            
+            return instrucciones[os] || instrucciones['Sistema desconocido'];
+        }
+
+        // Simulación de instalación PWA mejorada
+        function configurarInstalacionPWA() {
+            // Simulación de instalación PWA
+            const installButton = document.createElement('button');
+            installButton.innerHTML = '<i class="fas fa-download"></i> Instalar ClientPro+';
+            installButton.className = 'cta-button';
+            installButton.style.margin = '30px auto';
+            installButton.style.display = 'flex';
+            installButton.style.alignItems = 'center';
+            installButton.style.justifyContent = 'center';
+            installButton.style.gap = '10px';
+
+            // Verificar si el navegador soporta PWA
+            const esNavegadorSoportaPWA = () => {
+                return 'serviceWorker' in navigator && 'BeforeInstallPromptEvent' in window;
+            };
+
+            // Manejar la instalación real
+            let deferredPrompt;
+
+            // Solo agregar el botón de instalación si estamos en un entorno que soporta PWA (localhost o HTTPS)
+            // De lo contrario, simulamos la instalación.
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                
+                // Mostrar botón solo si hay soporte PWA
+                if (esNavegadorSoportaPWA()) {
+                    mostrarBotonInstalacion(installButton);
+                }
+            });
+            
+            // Configurar comportamiento del botón
+            installButton.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    // Instalación real
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    
+                    if (outcome === 'accepted') {
+                        installButton.innerHTML = '<i class="fas fa-check"></i> ¡Aplicación instalada!';
+                        installButton.style.backgroundColor = '#27ae60';
+                        installButton.style.color = 'white';
+                        installButton.disabled = true;
+                        
+                        // Mostrar mensaje de éxito
+                        mostrarMensajeExito();
+                    }
+                    deferredPrompt = null;
+                } else {
+                    // Simulación para presentación/demo
+                    simularInstalacion(installButton);
+                }
+            });
+            
+            // Si no hay evento beforeinstallprompt, mostrar simulación
+            setTimeout(() => {
+                if (!deferredPrompt) {
+                    mostrarBotonInstalacion(installButton);
+                }
+            }, 2000);
+
+        }
+
+        function mostrarBotonInstalacion(boton) {
+            const slide3 = document.querySelector('#slide-3 .slide-content');
+            const slide2 = document.querySelector('#slide-2 .slide-content');
+            
+            if (slide3) {
+                // Insertar después de los pasos de instalación
+                const installationSteps = slide3.querySelector('.installation-steps');
+                if (installationSteps) {
+                    installationSteps.parentNode.insertBefore(boton, installationSteps.nextSibling);
+                } else {
+                    slide3.appendChild(boton);
+                }
+            }
+            
+            // También mostrar en slide 2 para mayor visibilidad
+            if (slide2) {
+                const botonCopia = boton.cloneNode(true);
+                botonCopia.style.marginTop = '40px';
+                botonCopia.addEventListener('click', () => {
+                    document.querySelector('[data-slide="3"]').click();
+                });
+                slide2.appendChild(botonCopia);
+            }
+        }
+
+        function mostrarMensajeExito() {
+            const mensaje = document.createElement('div');
+            mensaje.className = 'pwa-explanation';
+            mensaje.style.backgroundColor = '#d4edda';
+            mensaje.style.borderColor = '#c3e6cb';
+            mensaje.style.color = '#155724';
+            mensaje.innerHTML = `
+                <h4><i class="fas fa-check-circle"></i> ¡Instalación exitosa!</h4>
+                <p>ClientPro+ ha sido instalado en su dispositivo. Puede acceder a la aplicación desde:</p>
+                <ul>
+                    <li><strong>Windows:</strong> Menú Inicio o escritorio</li>
+                    <li><strong>macOS:</strong> Launchpad o Aplicaciones</li>
+                    <li><strong>Android:</strong> Pantalla principal</li>
+                    <li><strong>iOS:</strong> Pantalla de inicio</li>
+                </ul>
+                <p><em>La aplicación funciona completamente offline y se actualizará automáticamente.</em></p>
+            `;
+            
+            const slide3 = document.getElementById('slide-3');
+            if (slide3) {
+                slide3.querySelector('.slide-content').appendChild(mensaje);
+            }
+        }
+
+        function simularInstalacion(boton) {
+            // Simulación visual de instalación
+            const originalTexto = boton.innerHTML;
+            const originalBackground = boton.style.backgroundColor;
+            
+            // Paso 1: Descargando
+            boton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Descargando aplicación...';
+            boton.disabled = true;
+            
+            setTimeout(() => {
+                // Paso 2: Instalando
+                boton.innerHTML = '<i class="fas fa-cog fa-spin"></i> Instalando en su dispositivo...';
+                
+                setTimeout(() => {
+                    // Paso 3: Completado
+                    boton.innerHTML = '<i class="fas fa-check"></i> ¡Instalación simulada completada!';
+                    boton.style.backgroundColor = '#27ae60';
+                    boton.style.color = 'white';
+                    boton.disabled = true;
+                    
+                    // Mostrar modal de éxito
+                    mostrarModalInstalacionExitosa();
+                    
+                    // Agregar indicador de app instalada
+                    agregarIndicadorAppInstalada();
+                }, 1500);
+            }, 1500);
+        }
+
+        function mostrarModalInstalacionExitosa() {
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0,0,0,0.7)';
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            modal.style.zIndex = '1000';
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 15px; max-width: 500px; text-align: center;">
+                    <div style="font-size: 4rem; color: #27ae60; margin-bottom: 20px;">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">¡Instalación simulada exitosa!</h3>
+                    <p>En un entorno real, ClientPro+ se instalaría como una aplicación nativa en su dispositivo.</p>
+                    <p><strong>Ventajas de la instalación PWA:</strong></p>
+                    <div class="benefits-list">
+                        <li>Acceso rápido desde el escritorio/menú inicio</li>
+                        <li>Funciona completamente sin conexión a internet</li>
+                        <li>Notificaciones push para alertas importantes</li>
+                        <li>Actualizaciones automáticas en segundo plano</li>
+                    </div>
+                    <button id="cerrar-modal" style="margin-top: 20px; padding: 10px 30px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Entendido
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Cerrar modal
+            modal.querySelector('#cerrar-modal').addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+            
+            // Cerrar al hacer clic fuera del modal
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            });
+        }
+
+        function agregarIndicadorAppInstalada() {
+            // Agregar indicador visual en la presentación
+            const indicator = document.createElement('div');
+            indicator.style.position = 'fixed';
+            indicator.style.top = '20px';
+            indicator.style.right = '20px';
+            indicator.style.background = '#27ae60';
+            indicator.style.color = 'white';
+            indicator.style.padding = '10px 15px';
+            indicator.style.borderRadius = '5px';
+            indicator.style.boxShadow = '0 3px 10px rgba(0,0,0,0.2)';
+            indicator.style.zIndex = '100';
+            indicator.style.display = 'flex';
+            indicator.style.alignItems = 'center';
+            indicator.style.gap = '10px';
+            indicator.innerHTML = `
+                <h4>
+                    <i class="fas fa-check"></i>
+                    <span>App instalada</span>
+                <h4>
+            `;
+            
+            document.body.appendChild(indicator);
+            
+            // Remover después de 5 segundos
+            setTimeout(() => {
+                if (indicator.parentNode) {
+                    indicator.style.opacity = '0';
+                    indicator.style.transition = 'opacity 0.5s';
+                    setTimeout(() => {
+                        if (indicator.parentNode) {
+                            document.body.removeChild(indicator);
+                        }
+                    }, 500);
+                }
+            }, 5000);
         }
 
         // Mostrar instrucciones específicas para el SO detectado
         document.addEventListener('DOMContentLoaded', function () {
+            // Inicializar detección de SO
             const os = detectOS();
+            const slide3 = document.getElementById('slide-3');
+
+            if (!slide3) return;
+
+            // Crear el elemento de información del SO
             const osHint = document.createElement('div');
             osHint.className = 'pwa-explanation';
             osHint.innerHTML = `
-                <h4><i class="fas fa-info-circle"></i> Detectamos que está usando ${os}</h4>
-                <p>Para instalar ClientPro+ en ${os}, siga las instrucciones específicas en el paso 2 del proceso de instalación.</p>
+                <h3><i class="fas fa-info-circle"></i> Detectamos que está usando ${os}</h3>
+                <p><strong>Para instalar ClientPro+ en ${os}, siga las instrucciones específica:</strong></p>
+                <div class="benefits-list">
+                    ${generarInstruccionesOS(os)}
+                </div>
             `;
 
-            // Insertar después del paso 1 si existe
-            const step1 = document.querySelector('.step[data-step="1"]');
+            // Insertar después del primer paso en el slide 3
+            const step1 = slide3.querySelector('.step:nth-child(1) .step-content .code-block');
             if (step1) {
                 step1.parentNode.insertBefore(osHint, step1.nextSibling);
+            } else {
+                // Fallback: agregar al inicio del contenido del slide
+                const slideContent = slide3.querySelector('.slide-content');
+                if (slideContent) {
+                    slideContent.insertBefore(osHint, slideContent.firstChild);
+                }
             }
+
+            // Inicializar sistema de instalación PWA
+            configurarInstalacionPWA()
         });
 
-        // Simulación de instalación PWA
-        let deferredPrompt;
-        const installButton = document.createElement('button');
-        installButton.textContent = '📥 Instalar ClientPro+';
-        installButton.className = 'cta-button';
-        installButton.style.margin = '20px auto';
-        installButton.style.display = 'block';
+        //ACTUALIZAR LA NAVEGACIÓN PARA QUE SEA MÁS ROBUSTA
+        function inicializarNavegacion() {
+            document.querySelectorAll('.nav-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remover clase active de todos los botones
+                    document.querySelectorAll('.nav-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Agregar clase active al botón clickeado
+                    this.classList.add('active');
+                    
+                    // Ocultar todos los slides
+                    document.querySelectorAll('.slide').forEach(slide => {
+                        slide.classList.remove('active');
+                    });
+                    
+                    // Mostrar el slide correspondiente
+                    const slideId = this.getAttribute('data-slide');
+                    const targetSlide = document.getElementById(`slide-${slideId}`);
+                    
+                    if (targetSlide) {
+                        targetSlide.classList.add('active');
+                        
+                        // Scroll al inicio del slide con offset para el header
+                        const headerHeight = document.querySelector('.presentation-header').offsetHeight;
+                        const slidePosition = targetSlide.offsetTop - headerHeight - 20;
+                        
+                        window.scrollTo({
+                            top: slidePosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        }
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.querySelector('#slide-3 .slide-content').appendChild(installButton);
-        });
-
-        installButton.addEventListener('click', async () => {
-            if (!deferredPrompt) return;
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                installButton.textContent = '✅ ¡Instalado!';
-                installButton.disabled = true;
-            }
-            deferredPrompt = null;
-        });
+        // Inicializar navegación cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', inicializarNavegacion);
     </script>
 </body>
 
