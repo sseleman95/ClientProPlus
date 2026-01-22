@@ -45,10 +45,7 @@ ClientPro+ is distributed under the **MIT** license.
 
 ## Disclaimer
 
-1. **Educational Purpose:** This software is solely for educational and technical purposes.
-2. **Not for Gambling:** It should not be used for actual gambling.
-3. **No Warranties:** The software is provided "as is," without warranties of any kind.
-4. **User Responsibility:** The user is responsible for their use of the software.
+1. **User Responsibility:** The user is responsible for their use of the software.
 
 ## Credits
 
